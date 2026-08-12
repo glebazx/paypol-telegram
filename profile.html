@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль PayPol</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="body">
+    <header class="topbar">
+        <div class="container">
+            <a class="logo" href="main.html">PayPol</a>
+            <div class="header-right">
+                <nav class="nav-menu">
+                    <a href="main.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                </nav>
+                <div class="theme-toggle">
+                    <button id="theme-btn" class="theme-btn">🌙</button>
+                </div>
+                <div id="auth-menu" class="auth-menu"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content profile-page">
+        <section class="profile-card">
+            <div class="profile-header">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <div class="profile-avatar" id="profile-avatar">A</div>
+                    <div>
+                        <h1 id="profile-name">Профиль</h1>
+                        <p class="profile-subtitle">Клиент банка PayPol</p>
+                    </div>
+                </div>
+                <button class="profile-button" id="logout-btn" type="button">Выйти</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="cards">Карты</button>
+                <button class="tab-btn" data-tab="transfer">Переводы</button>
+                <button class="tab-btn" data-tab="exchange">Обмен</button>
+                <button class="tab-btn" data-tab="contacts">Контакты</button>
+                <button class="tab-btn" data-tab="history">История</button>
+                <button class="tab-btn" data-tab="settings">Настройки</button>
+            </div>
+
+            <div id="cards-tab" class="tab-content active">
+                <h2>Мои карты</h2>
+                <div id="cards-container" class="cards-grid"></div>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f9fbff; border: 1px solid #e4ebff; border-radius: 14px;">
+                    <h3>Оформить новую карту</h3>
+                    <div class="form-section" style="background: none; border: none; padding: 0;">
+                        <label>Название карты:</label>
+                        <input id="card-name" type="text" class="form-control" placeholder="Например: Моя рабочая карта">
+                        
+                        <label style="margin-top: 15px;">Тип карты:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <button class="card-type-btn" data-type="Visa">💳 Visa</button>
+                            <button class="card-type-btn" data-type="Mastercard">💳 Mastercard</button>
+                            <button class="card-type-btn" data-type="Mir">🇷🇺 Mir</button>
+                            <button class="card-type-btn" data-type="UnionPay">🏦 UnionPay</button>
+                        </div>
+                        <input id="selected-card-type" type="hidden" value="Visa">
+                        
+                        <label style="margin-top: 15px;">Дизайн карты:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <button class="card-design-btn" data-design="classic" data-color="#0b4fbd">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #0b4fbd, #1e78ff); border-radius: 8px;"></div>
+                                Классик
+                            </button>
+                            <button class="card-design-btn" data-design="gold" data-color="#d4af37">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #d4af37, #f4d03f); border-radius: 8px;"></div>
+                                Золото
+                            </button>
+                            <button class="card-design-btn" data-design="black" data-color="#1a1a1a">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #1a1a1a, #333333); border-radius: 8px;"></div>
+                                Черная
+                            </button>
+                            <button class="card-design-btn" data-design="platinum" data-color="#e5e4e2">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #e5e4e2, #f0f0f0); border: 1px solid #ccc; border-radius: 8px;"></div>
+                                Платина
+                            </button>
+                            <button class="card-design-btn" data-design="gradient" data-color="#ff6b6b">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #ff6b6b, #ee5a6f); border-radius: 8px;"></div>
+                                Энергия
+                            </button>
+                            <button class="card-design-btn" data-design="ocean" data-color="#0088ff">
+                                <div style="width: 100%; height: 60px; background: linear-gradient(135deg, #0088ff, #00d4ff); border-radius: 8px;"></div>
+                                Океан
+                            </button>
+                        </div>
+                        <input id="selected-card-design" type="hidden" value="classic">
+                        
+                        <label style="margin-top: 15px;">
+                            <input type="checkbox" id="card-terms-check"> Я согласен с условиями использования карты
+                        </label>
+                        
+                        <button id="issue-card-btn" class="btn-primary" style="margin-top: 15px; width: 100%;">Оформить карту</button>
+                        <div id="issue-card-message" class="message-box"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h3>Пополнить баланс</h3>
+                    <select id="add-money-card" class="form-control"></select>
+                    <select id="add-money-currency" class="form-control" style="margin-top: 10px;">
+                        <option value="RUB">Рубли (₽)</option>
+                        <option value="USD">Доллары ($)</option>
+                        <option value="EUR">Евро (€)</option>
+                    </select>
+                    <input id="add-money-amount" type="number" class="form-control" placeholder="Сумма" step="0.01" style="margin-top: 10px;">
+                    <button id="add-money-btn" class="btn-primary" style="margin-top: 10px;">Пополнить</button>
+                    <div id="add-money-message" class="message-box"></div>
+                </div>
+            </div>
+
+            <div id="transfer-tab" class="tab-content">
+                <h2>Отправить деньги</h2>
+                <div class="form-section">
+                    <label>Выберите карту:</label>
+                    <select id="transfer-card" class="form-control"></select>
+                    <label style="margin-top: 15px;">Валюта:</label>
+                    <select id="transfer-currency" class="form-control">
+                        <option value="RUB">Рубли (₽)</option>
+                        <option value="USD">Доллары ($)</option>
+                        <option value="EUR">Евро (€)</option>
+                    </select>
+                    <label style="margin-top: 15px;">Кому (имя пользователя):</label>
+                    <input id="transfer-recipient" type="text" class="form-control" placeholder="Имя получателя">
+                    <label style="margin-top: 15px;">Сумма:</label>
+                    <input id="transfer-amount" type="number" class="form-control" placeholder="0.00" step="0.01">
+                    <button id="transfer-btn" class="btn-primary" style="margin-top: 15px;">Отправить</button>
+                </div>
+                <div id="transfer-message" class="message-box"></div>
+            </div>
+
+            <div id="exchange-tab" class="tab-content">
+                <h2>Обмен валют</h2>
+                <div class="form-section">
+                    <label>Выберите карту:</label>
+                    <select id="exchange-card" class="form-control"></select>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                        <div>
+                            <label>Из:</label>
+                            <select id="from-currency" class="form-control">
+                                <option value="RUB">Рубли (₽)</option>
+                                <option value="USD">Доллары ($)</option>
+                                <option value="EUR">Евро (€)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>В:</label>
+                            <select id="to-currency" class="form-control">
+                                <option value="USD">Доллары ($)</option>
+                                <option value="RUB">Рубли (₽)</option>
+                                <option value="EUR">Евро (€)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <label style="margin-top: 15px;">Сумма:</label>
+                    <input id="exchange-amount" type="number" class="form-control" placeholder="0.00" step="0.01">
+                    <div id="exchange-preview" style="padding: 10px; background: #f5f5f5; border-radius: 8px; margin: 15px 0;"></div>
+                    <button id="exchange-btn" class="btn-primary">Обменять</button>
+                </div>
+                <div id="exchange-message" class="message-box"></div>
+            </div>
+
+            <div id="contacts-tab" class="tab-content">
+                <h2>Сохраненные контакты</h2>
+                <div id="contacts-list" style="margin-bottom: 20px;"></div>
+                <div class="form-section">
+                    <label>Имя контакта:</label>
+                    <input id="contact-name" type="text" class="form-control" placeholder="Например: Мой друг">
+                    <label style="margin-top: 15px;">Имя пользователя:</label>
+                    <input id="contact-username" type="text" class="form-control" placeholder="Имя в PayPol">
+                    <button id="add-contact-btn" class="btn-primary" style="margin-top: 15px;">Добавить контакт</button>
+                </div>
+                <div id="contact-message" class="message-box"></div>
+            </div>
+
+            <div id="history-tab" class="tab-content">
+                <h2>История операций</h2>
+                <div id="history-container" class="activity-block">
+                    <p style="text-align: center; color: #999;">Операций не найдено</p>
+                </div>
+            </div>
+
+            <div id="settings-tab" class="tab-content">
+                <h2>Настройки аккаунта</h2>
+                <div class="form-section">
+                    <label>Тема:</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <button class="theme-option" data-theme="light">☀️ Светлая</button>
+                        <button class="theme-option" data-theme="dark">🌙 Тёмная</button>
+                    </div>
+                    <label>
+                        <input type="checkbox" id="notifications-check"> Включить уведомления
+                    </label>
+                    <h3 style="margin-top: 20px;">История входов</h3>
+                    <div id="login-history" style="font-size: 0.9em; max-height: 200px; overflow-y: auto;"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const userName = new URLSearchParams(location.search).get('name');
+        let userData = JSON.parse(localStorage.getItem('paypolUser')) || {};
+        let currentTheme = localStorage.getItem('paypolTheme') || 'light';
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`/api/user/${userName}`);
+                userData = await res.json();
+                renderProfile();
+                renderCards();
+                renderTransferForm();
+                renderExchangeForm();
+                renderHistory();
+                renderLoginHistory();
+                renderContacts();
+                initCardHandlers();
+            } catch (err) {
+                console.error('Ошибка загрузки профиля:', err);
+            }
+        }
+
+        function renderProfile() {
+            const firstLetter = userName.charAt(0).toUpperCase();
+            document.getElementById('profile-avatar').textContent = firstLetter;
+            document.getElementById('profile-name').textContent = userName;
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            
+            userData.cards?.forEach(card => {
+                const balanceText = Object.entries(card.balance)
+                    .map(([curr, bal]) => `${bal.toFixed(2)} ${curr}`)
+                    .join(' / ');
+                
+                const cardHtml = `
+                    <div class="bank-card">
+                        <div class="card-top">
+                            <span>PayPol</span>
+                            <span>${card.type}</span>
+                        </div>
+                        <div class="card-number">${card.number.slice(-4).padStart(16, '•')}</div>
+                        <div class="card-bottom">
+                            <span>${userName}</span>
+                            <span>${new Date(card.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            ${balanceText}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        function renderTransferForm() {
+            const select = document.getElementById('transfer-card');
+            select.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                select.appendChild(option);
+            });
+        }
+
+        function renderExchangeForm() {
+            const select = document.getElementById('exchange-card');
+            select.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                select.appendChild(option);
+            });
+            
+            const addSelect = document.getElementById('add-money-card');
+            addSelect.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                addSelect.appendChild(option);
+            });
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            if (!userData.transactions || userData.transactions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Операций не найдено</p>';
+                return;
+            }
+
+            container.innerHTML = userData.transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map(t => {
+                    let desc = '';
+                    if (t.type === 'transfer_out') desc = `Переведено ${t.recipient}`;
+                    else if (t.type === 'transfer_in') desc = `Получено от ${t.sender}`;
+                    else if (t.type === 'deposit') desc = 'Пополнение';
+                    else if (t.type === 'exchange') desc = `Обмен ${t.fromCurrency} → ${t.toCurrency}`;
+
+                    return `
+                        <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>${desc}</span>
+                                <strong>${t.type === 'transfer_out' || t.type === 'exchange' ? '-' : '+'} ${t.amount || t.fromAmount || 0} ${t.currency || t.fromCurrency}</strong>
+                            </div>
+                            <div style="font-size: 0.85em; color: #999;">${new Date(t.date).toLocaleString('ru-RU')}</div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        function renderLoginHistory() {
+            const container = document.getElementById('login-history');
+            if (!userData.loginHistory || userData.loginHistory.length === 0) {
+                container.innerHTML = '<p>Нет истории входов</p>';
+                return;
+            }
+
+            container.innerHTML = userData.loginHistory
+                .slice()
+                .reverse()
+                .slice(0, 20)
+                .map(h => `<div style="padding: 5px 0; border-bottom: 1px solid #eee;">${new Date(h.date).toLocaleString('ru-RU')} - ${h.ip}</div>`)
+                .join('');
+        }
+
+        function renderContacts() {
+            const container = document.getElementById('contacts-list');
+            if (!userData.contacts || userData.contacts.length === 0) {
+                container.innerHTML = '<p style="color: #999;">Контакты не добавлены</p>';
+                return;
+            }
+
+            container.innerHTML = userData.contacts.map(c => `
+                <div style="padding: 10px; background: #f9f9f9; border-radius: 8px; margin-bottom: 10px;">
+                    <strong>${c.name}</strong> (@${c.username})
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('transfer-btn').addEventListener('click', async () => {
+            const cardId = document.getElementById('transfer-card').value;
+            const currency = document.getElementById('transfer-currency').value;
+            const recipient = document.getElementById('transfer-recipient').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+
+            try {
+                const res = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fromUser: userName, toUser: recipient, cardId, amount, currency })
+                });
+                const data = await res.json();
+                const msg = document.getElementById('transfer-message');
+                if (res.ok) {
+                    msg.textContent = '✓ Перевод успешен!';
+                    msg.className = 'message-box success';
+                    loadProfile();
+                } else {
+                    msg.textContent = '✗ ' + data.error;
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('transfer-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        document.getElementById('exchange-btn').addEventListener('click', async () => {
+            const cardId = document.getElementById('exchange-card').value;
+            const fromCurrency = document.getElementById('from-currency').value;
+            const toCurrency = document.getElementById('to-currency').value;
+            const amount = parseFloat(document.getElementById('exchange-amount').value);
+
+            try {
+                const res = await fetch('/api/exchange', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, cardId, fromCurrency, toCurrency, amount })
+                });
+                const data = await res.json();
+                const msg = document.getElementById('exchange-message');
+                if (res.ok) {
+                    msg.textContent = `✓ Обменено! Получено ${data.newBalance[toCurrency].toFixed(2)} ${toCurrency}`;
+                    msg.className = 'message-box success';
+                    loadProfile();
+                } else {
+                    msg.textContent = '✗ ' + data.error;
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('exchange-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        document.getElementById('add-contact-btn').addEventListener('click', async () => {
+            const name = document.getElementById('contact-name').value;
+            const username = document.getElementById('contact-username').value;
+
+            try {
+                const res = await fetch('/api/add-contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, contactName: name, contactUsername: username })
+                });
+                const msg = document.getElementById('contact-message');
+                if (res.ok) {
+                    msg.textContent = '✓ Контакт добавлен!';
+                    msg.className = 'message-box success';
+                    document.getElementById('contact-name').value = '';
+                    document.getElementById('contact-username').value = '';
+                    loadProfile();
+                } else {
+                    msg.textContent = '✗ Ошибка';
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('contact-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        // Функция для инициализации обработчиков карт
+        function initCardHandlers() {
+            // Обработчики для выбора типа карты
+            document.querySelectorAll('.card-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.card-type-btn').forEach(b => b.style.opacity = '0.5');
+                    btn.style.opacity = '1';
+                    btn.style.border = '2px solid #0b4fbd';
+                    document.getElementById('selected-card-type').value = btn.dataset.type;
+                });
+            });
+
+            // Обработчики для выбора дизайна карты
+            document.querySelectorAll('.card-design-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.card-design-btn').forEach(b => b.style.border = '2px solid transparent');
+                    btn.style.border = '2px solid #0b4fbd';
+                    document.getElementById('selected-card-design').value = btn.dataset.design;
+                });
+            });
+
+            // Установка активного дизайна по умолчанию
+            const classicBtn = document.querySelector('[data-design="classic"]');
+            if (classicBtn) {
+                classicBtn.style.border = '2px solid #0b4fbd';
+            }
+        }
+
+        document.getElementById('new-card-btn')?.addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/new-card', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName })
+                });
+                if (res.ok) {
+                    loadProfile();
+                    alert('✓ Карта добавлена!');
+                }
+            } catch (err) {
+                alert('Ошибка при добавлении карты');
+            }
+        });
+
+        // Оформление карты
+        document.getElementById('issue-card-btn').addEventListener('click', async () => {
+            const cardName = document.getElementById('card-name').value;
+            const cardType = document.getElementById('selected-card-type').value;
+            const cardDesign = document.getElementById('selected-card-design').value;
+            const termsAccepted = document.getElementById('card-terms-check').checked;
+
+            if (!cardName) {
+                alert('Пожалуйста, введите название карты');
+                return;
+            }
+
+            if (!termsAccepted) {
+                alert('Пожалуйста, согласитесь с условиями использования');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/new-card', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, cardType, cardDesign, cardName })
+                });
+                const data = await res.json();
+                const msg = document.getElementById('issue-card-message');
+                if (res.ok) {
+                    msg.textContent = `✓ Карта "${cardName}" успешно оформлена! Номер: ${data.card.number}`;
+                    msg.className = 'message-box success';
+                    document.getElementById('card-name').value = '';
+                    document.getElementById('card-terms-check').checked = false;
+                    document.querySelectorAll('.card-type-btn').forEach(b => b.style.opacity = '0.5');
+                    document.querySelectorAll('.card-design-btn').forEach(b => b.style.border = '2px solid transparent');
+                    document.getElementById('selected-card-type').value = 'Visa';
+                    document.getElementById('selected-card-design').value = 'classic';
+                    loadProfile();
+                } else {
+                    msg.textContent = '✗ ' + (data.error || 'Ошибка');
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('issue-card-message').textContent = '✗ Ошибка при оформлении карты';
+                document.getElementById('issue-card-message').className = 'message-box error';
+            }
+        });
+
+        document.getElementById('add-money-btn').addEventListener('click', async () => {
+            const cardId = document.getElementById('add-money-card').value;
+            const currency = document.getElementById('add-money-currency').value;
+            const amount = parseFloat(document.getElementById('add-money-amount').value);
+
+            try {
+                const res = await fetch('/api/add-money', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, cardId, amount, currency })
+                });
+                const data = await res.json();
+                const msg = document.getElementById('add-money-message');
+                if (res.ok) {
+                    msg.textContent = `✓ Баланс пополнен на ${amount} ${currency}`;
+                    msg.className = 'message-box success';
+                    document.getElementById('add-money-amount').value = '';
+                    loadProfile();
+                } else {
+                    msg.textContent = '✗ ' + data.error;
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('add-money-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const tabName = btn.dataset.tab + '-tab';
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        function applyTheme(theme) {
+            document.getElementById('body').setAttribute('data-theme', theme);
+            localStorage.setItem('paypolTheme', theme);
+            const themeBtn = document.getElementById('theme-btn');
+            themeBtn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        document.querySelectorAll('.theme-option').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const theme = btn.dataset.theme;
+                applyTheme(theme);
+                try {
+                    await fetch('/api/theme', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userName, theme })
+                    });
+                } catch (err) {}
+            });
+        });
+
+        document.getElementById('theme-btn').addEventListener('click', () => {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            currentTheme = newTheme;
+            applyTheme(newTheme);
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('paypolUser');
+            window.location.href = 'login.html';
+        });
+
+        applyTheme(currentTheme);
+        loadProfile();
+        
+        function renderAuthMenu() {
+            const menu = document.getElementById('auth-menu');
+            const user = JSON.parse(localStorage.getItem('paypolUser'));
+            if (user) {
+                const firstLetter = user.name.charAt(0).toUpperCase();
+                menu.innerHTML = `<a href="profile.html?name=${user.name}" class="profile-badge">${firstLetter}</a>`;
+            }
+        }
+        renderAuthMenu();
+    </script>
+</body>
+</html>

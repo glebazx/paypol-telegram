@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPol - Мини приложение</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body id="body">
+    <header class="topbar">
+        <div class="container">
+            <a class="logo" href="#">PayPol</a>
+            <div class="header-right">
+                <div id="auth-menu" class="auth-menu"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content profile-page">
+        <section class="profile-card">
+            <div id="loading" style="text-align: center; padding: 40px;">
+                <p>⏳ Загрузка приложения...</p>
+            </div>
+
+            <div id="telegram-not-supported" style="display: none; text-align: center; padding: 40px;">
+                <h2>⚠️ Telegram Web App недоступен</h2>
+                <p>Это приложение работает только в Telegram.</p>
+                <p>Откройте его через мини-приложение в боте PayPol.</p>
+            </div>
+
+            <div id="app-container" style="display: none;">
+                <div class="profile-header">
+                    <div style="display:flex; align-items:center; gap:16px;">
+                        <div class="profile-avatar" id="profile-avatar">P</div>
+                        <div>
+                            <h1 id="profile-name">Профиль</h1>
+                            <p class="profile-subtitle" id="profile-subtitle">Клиент PayPol</p>
+                        </div>
+                    </div>
+                    <button class="profile-button" id="logout-btn" type="button">Выход</button>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="cards">Карты</button>
+                    <button class="tab-btn" data-tab="transfer">Переводы</button>
+                    <button class="tab-btn" data-tab="exchange">Обмен</button>
+                    <button class="tab-btn" data-tab="history">История</button>
+                </div>
+
+                <!-- Карты -->
+                <div id="cards-tab" class="tab-content active">
+                    <h2>Мои карты</h2>
+                    <div id="cards-container" class="cards-grid"></div>
+
+                    <div style="margin-top: 30px;">
+                        <h3>Пополнить баланс</h3>
+                        <select id="add-money-card" class="form-control"></select>
+                        <select id="add-money-currency" class="form-control" style="margin-top: 10px;">
+                            <option value="RUB">Рубли (₽)</option>
+                            <option value="USD">Доллары ($)</option>
+                            <option value="EUR">Евро (€)</option>
+                        </select>
+                        <input id="add-money-amount" type="number" class="form-control" placeholder="Сумма" step="0.01" style="margin-top: 10px;">
+                        <button id="add-money-btn" class="btn-primary" style="margin-top: 10px;">Пополнить</button>
+                        <div id="add-money-message" class="message-box"></div>
+                    </div>
+                </div>
+
+                <!-- Переводы -->
+                <div id="transfer-tab" class="tab-content">
+                    <h2>Отправить деньги</h2>
+                    <div class="form-section">
+                        <label>Выберите карту:</label>
+                        <select id="transfer-card" class="form-control"></select>
+                        
+                        <label style="margin-top: 15px;">Валюта:</label>
+                        <select id="transfer-currency" class="form-control">
+                            <option value="RUB">Рубли (₽)</option>
+                            <option value="USD">Доллары ($)</option>
+                            <option value="EUR">Евро (€)</option>
+                        </select>
+                        
+                        <label style="margin-top: 15px;">Кому (имя пользователя):</label>
+                        <input id="transfer-recipient" type="text" class="form-control" placeholder="Имя получателя">
+                        
+                        <label style="margin-top: 15px;">Сумма:</label>
+                        <input id="transfer-amount" type="number" class="form-control" placeholder="0.00" step="0.01">
+                        
+                        <button id="transfer-btn" class="btn-primary" style="margin-top: 15px;">Отправить</button>
+                    </div>
+                    <div id="transfer-message" class="message-box"></div>
+                </div>
+
+                <!-- Обмен -->
+                <div id="exchange-tab" class="tab-content">
+                    <h2>Обмен валют</h2>
+                    <div class="form-section">
+                        <label>Выберите карту:</label>
+                        <select id="exchange-card" class="form-control"></select>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                            <div>
+                                <label>Из:</label>
+                                <select id="from-currency" class="form-control">
+                                    <option value="RUB">Рубли (₽)</option>
+                                    <option value="USD">Доллары ($)</option>
+                                    <option value="EUR">Евро (€)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>В:</label>
+                                <select id="to-currency" class="form-control">
+                                    <option value="USD">Доллары ($)</option>
+                                    <option value="RUB">Рубли (₽)</option>
+                                    <option value="EUR">Евро (€)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <label style="margin-top: 15px;">Сумма:</label>
+                        <input id="exchange-amount" type="number" class="form-control" placeholder="0.00" step="0.01">
+                        
+                        <button id="exchange-btn" class="btn-primary" style="margin-top: 15px;">Обменять</button>
+                    </div>
+                    <div id="exchange-message" class="message-box"></div>
+                </div>
+
+                <!-- История -->
+                <div id="history-tab" class="tab-content">
+                    <h2>История операций</h2>
+                    <div id="history-container" class="activity-block">
+                        <p style="text-align: center; color: #999;">Операций не найдено</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        let telegramUser = null;
+        let userName = null;
+
+        // Проверка, запущено ли в Telegram
+        function initTelegram() {
+            if (tg && tg.initData) {
+                tg.ready();
+                tg.expand();
+                telegramUser = tg.initDataUnsafe?.user;
+                userName = telegramUser?.username || telegramUser?.first_name || 'User';
+                
+                // Установим основной цвет
+                tg.setBackgroundColor('#f2f5fb');
+                tg.setHeaderColor('#0b4fbd');
+
+                // Показываем приложение
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('app-container').style.display = 'block';
+                
+                loadProfile();
+            } else {
+                // Не в Telegram
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('telegram-not-supported').style.display = 'block';
+                console.log('Не в Telegram. Используется обычный браузер.');
+                
+                // Для тестирования в браузере
+                userName = new URLSearchParams(location.search).get('user') || 'TestUser';
+                document.getElementById('app-container').style.display = 'block';
+                loadProfile();
+            }
+        }
+
+        let userData = {};
+        let currentTheme = 'light';
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`/api/user/${userName}`);
+                userData = await res.json();
+                renderProfile();
+                renderCards();
+                renderTransferForm();
+                renderExchangeForm();
+                renderHistory();
+            } catch (err) {
+                console.error('Ошибка загрузки профиля:', err);
+                alert('Не удалось загрузить профиль');
+            }
+        }
+
+        function renderProfile() {
+            const firstLetter = userName.charAt(0).toUpperCase();
+            document.getElementById('profile-avatar').textContent = firstLetter;
+            document.getElementById('profile-name').textContent = userName;
+            document.getElementById('profile-subtitle').textContent = `ID: ${telegramUser?.id || 'guest'}`;
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            container.innerHTML = '';
+            
+            userData.cards?.forEach(card => {
+                const balanceText = Object.entries(card.balance)
+                    .map(([curr, bal]) => `${bal.toFixed(2)} ${curr}`)
+                    .join(' / ');
+                
+                const cardHtml = `
+                    <div class="bank-card">
+                        <div class="card-top">
+                            <span>PayPol</span>
+                            <span>${card.type}</span>
+                        </div>
+                        <div class="card-number">${card.number.slice(-4).padStart(16, '•')}</div>
+                        <div class="card-bottom">
+                            <span>${userName}</span>
+                            <span>${new Date(card.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            ${balanceText}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        function renderTransferForm() {
+            const select = document.getElementById('transfer-card');
+            select.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                select.appendChild(option);
+            });
+        }
+
+        function renderExchangeForm() {
+            const select = document.getElementById('exchange-card');
+            select.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                select.appendChild(option);
+            });
+            
+            const addSelect = document.getElementById('add-money-card');
+            addSelect.innerHTML = '';
+            userData.cards?.forEach(card => {
+                const option = document.createElement('option');
+                option.value = card.id;
+                option.textContent = `${card.type} (${card.number.slice(-4)})`;
+                addSelect.appendChild(option);
+            });
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-container');
+            if (!userData.transactions || userData.transactions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Операций не найдено</p>';
+                return;
+            }
+
+            container.innerHTML = userData.transactions
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .map(t => {
+                    let desc = '';
+                    if (t.type === 'transfer_out') desc = `Переведено ${t.recipient}`;
+                    else if (t.type === 'transfer_in') desc = `Получено от ${t.sender}`;
+                    else if (t.type === 'deposit') desc = 'Пополнение';
+                    else if (t.type === 'exchange') desc = `Обмен ${t.fromCurrency} → ${t.toCurrency}`;
+
+                    return `
+                        <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>${desc}</span>
+                                <strong>${t.type === 'transfer_out' || t.type === 'exchange' ? '-' : '+'} ${t.amount || t.fromAmount || 0} ${t.currency || t.fromCurrency}</strong>
+                            </div>
+                            <div style="font-size: 0.85em; color: #999;">${new Date(t.date).toLocaleString('ru-RU')}</div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        // Обработчики событий
+        document.getElementById('transfer-btn')?.addEventListener('click', async () => {
+            const cardId = document.getElementById('transfer-card').value;
+            const currency = document.getElementById('transfer-currency').value;
+            const recipient = document.getElementById('transfer-recipient').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+
+            try {
+                const res = await fetch('/api/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fromUser: userName, toUser: recipient, cardId, amount, currency })
+                });
+                const msg = document.getElementById('transfer-message');
+                if (res.ok) {
+                    msg.textContent = '✓ Перевод успешен!';
+                    msg.className = 'message-box success';
+                    loadProfile();
+                    if (tg) tg.HapticFeedback.notificationOccurred('success');
+                } else {
+                    msg.textContent = '✗ Ошибка перевода';
+                    msg.className = 'message-box error';
+                    if (tg) tg.HapticFeedback.notificationOccurred('error');
+                }
+            } catch (err) {
+                document.getElementById('transfer-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        document.getElementById('exchange-btn')?.addEventListener('click', async () => {
+            const cardId = document.getElementById('exchange-card').value;
+            const fromCurrency = document.getElementById('from-currency').value;
+            const toCurrency = document.getElementById('to-currency').value;
+            const amount = parseFloat(document.getElementById('exchange-amount').value);
+
+            try {
+                const res = await fetch('/api/exchange', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, cardId, fromCurrency, toCurrency, amount })
+                });
+                const data = await res.json();
+                const msg = document.getElementById('exchange-message');
+                if (res.ok) {
+                    msg.textContent = `✓ Обменено! Получено ${data.newBalance[toCurrency].toFixed(2)} ${toCurrency}`;
+                    msg.className = 'message-box success';
+                    loadProfile();
+                    if (tg) tg.HapticFeedback.notificationOccurred('success');
+                } else {
+                    msg.textContent = '✗ Ошибка обмена';
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('exchange-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        document.getElementById('add-money-btn')?.addEventListener('click', async () => {
+            const cardId = document.getElementById('add-money-card').value;
+            const currency = document.getElementById('add-money-currency').value;
+            const amount = parseFloat(document.getElementById('add-money-amount').value);
+
+            try {
+                const res = await fetch('/api/add-money', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userName, cardId, amount, currency })
+                });
+                const msg = document.getElementById('add-money-message');
+                if (res.ok) {
+                    msg.textContent = `✓ Баланс пополнен на ${amount} ${currency}`;
+                    msg.className = 'message-box success';
+                    document.getElementById('add-money-amount').value = '';
+                    loadProfile();
+                    if (tg) tg.HapticFeedback.notificationOccurred('success');
+                } else {
+                    msg.textContent = '✗ Ошибка';
+                    msg.className = 'message-box error';
+                }
+            } catch (err) {
+                document.getElementById('add-money-message').textContent = '✗ Ошибка';
+            }
+        });
+
+        // Вкладки
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                const tabName = btn.dataset.tab + '-tab';
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Выход
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            if (tg) tg.close();
+            else window.location.href = 'main.html';
+        });
+
+        // Инициализация
+        window.addEventListener('load', initTelegram);
+    </script>
+</body>
+</html>

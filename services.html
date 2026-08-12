@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Услуги PayPol</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container">
+            <a class="logo" href="main.html">PayPol</a>
+            <div class="header-right">
+                <nav class="nav-menu">
+                    <a href="main.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                    <a href="#about">О нас</a>
+                    <a href="#contact">Контакты</a>
+                </nav>
+                <div id="auth-menu" class="auth-menu"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section id="services">
+            <h1>Услуги банка PayPol</h1>
+            <p>PayPol — это современный банк, который предоставляет полный набор финансовых услуг для частных и корпоративных клиентов.</p>
+
+            <ul>
+                <li><strong>Онлайн-банкинг:</strong> управление счетами, переводы и оплата услуг в любое время.</li>
+                <li><strong>Карты</strong> с кешбэком и персональными лимитами.</li>
+                <li><strong>Кредиты</strong> на выгодных условиях для бизнеса и частных лиц.</li>
+                <li><strong>Инвестиции</strong> и накопительные программы с надежной защитой.</li>
+            </ul>
+
+            <p>Мы гарантируем безопасность ваших средств и удобство управления финансами. PayPol — это ваш финансовый партнер, которому можно доверять.</p>
+        </section>
+    </main>
+
+    <script>
+        const authMenu = document.getElementById('auth-menu');
+        const savedUser = JSON.parse(localStorage.getItem('paypolUser') || 'null');
+
+        if (savedUser && savedUser.name) {
+            const firstLetter = savedUser.name.trim().charAt(0).toUpperCase();
+            authMenu.innerHTML = `
+                <a href="profile.html?name=${encodeURIComponent(savedUser.name)}" class="profile-badge" title="${savedUser.name}">${firstLetter}</a>
+            `;
+        } else {
+            authMenu.innerHTML = `
+                <a href="register.html" class="auth-link">Зарегистрироваться</a>
+                <a href="login.html" class="auth-link">Войти</a>
+            `;
+        }
+    </script>
+</body>
+</html>

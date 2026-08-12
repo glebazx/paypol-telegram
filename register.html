@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация PayPol</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container">
+            <a class="logo" href="main.html">PayPol</a>
+            <div class="header-right">
+                <nav class="nav-menu">
+                    <a href="main.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                </nav>
+                <div id="auth-menu" class="auth-menu"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content auth-page">
+        <div class="auth-card">
+            <h1>Регистрация</h1>
+            <p>Создайте аккаунт PayPol, чтобы сохранять данные в `info.json`.</p>
+            <form id="register-form">
+                <label>
+                    Имя пользователя
+                    <input type="text" name="name" required />
+                </label>
+                <label>
+                    Пароль
+                    <input type="password" name="password" required />
+                </label>
+                <button type="submit">Зарегистрироваться</button>
+                <div class="form-message" id="register-message"></div>
+            </form>
+            <p class="form-note">Уже есть аккаунт? <a href="login.html">Войти</a></p>
+        </div>
+    </main>
+
+    <script>
+        const authMenu = document.getElementById('auth-menu');
+        const savedUser = JSON.parse(localStorage.getItem('paypolUser') || 'null');
+
+        if (savedUser && savedUser.name) {
+            const firstLetter = savedUser.name.trim().charAt(0).toUpperCase();
+            authMenu.innerHTML = `
+                <a href="profile.html?name=${encodeURIComponent(savedUser.name)}" class="profile-badge" title="${savedUser.name}">${firstLetter}</a>
+            `;
+        } else {
+            authMenu.innerHTML = `
+                <a href="register.html" class="auth-link">Зарегистрироваться</a>
+                <a href="login.html" class="auth-link">Войти</a>
+            `;
+        }
+
+        const registerForm = document.getElementById('register-form');
+        const registerMessage = document.getElementById('register-message');
+
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            registerMessage.textContent = '';
+
+            const formData = new FormData(registerForm);
+            const data = {
+                name: formData.get('name').trim(),
+                password: formData.get('password').trim(),
+            };
+
+            if (!data.name || !data.password) {
+                registerMessage.textContent = 'Введите имя и пароль.';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    registerMessage.textContent = result.error || 'Ошибка регистрации.';
+                    return;
+                }
+
+                registerMessage.textContent = 'Регистрация прошла успешно. Теперь вы можете войти.';
+                registerMessage.classList.add('success');
+                registerForm.reset();
+            } catch (error) {
+                registerMessage.textContent = 'Сервер недоступен. Попробуйте позже.';
+            }
+        });
+    </script>
+</body>
+</html>

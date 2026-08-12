@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPol</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="container">
+            <a class="logo" href="main.html">PayPol</a>
+            <div class="header-right">
+                <nav class="nav-menu">
+                    <a href="main.html">Главная</a>
+                    <a href="services.html">Услуги</a>
+                    <a href="#about">О нас</a>
+                    <a href="#contact">Контакты</a>
+                </nav>
+                <div id="auth-menu" class="auth-menu"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <section id="home">
+            <h1>Добро пожаловать в PayPol</h1>
+            <p>Вы находитесь на официальном сайте банка PayPol — вашего надежного партнера для платежей, кредитов и цифрового банкинга.</p>
+            <p>Мы предлагаем безопасный онлайн-банк с удобными услугами для физических и юридических клиентов. В PayPol ваша финансовая свобода всегда под контролем.</p>
+        </section>
+    </main>
+
+    <script>
+        const authMenu = document.getElementById('auth-menu');
+        const savedUser = JSON.parse(localStorage.getItem('paypolUser') || 'null');
+
+        if (savedUser && savedUser.name) {
+            const firstLetter = savedUser.name.trim().charAt(0).toUpperCase();
+            authMenu.innerHTML = `
+                <a href="profile.html?name=${encodeURIComponent(savedUser.name)}" class="profile-badge" title="${savedUser.name}">${firstLetter}</a>
+            `;
+        } else {
+            authMenu.innerHTML = `
+                <a href="register.html" class="auth-link">Зарегистрироваться</a>
+                <a href="login.html" class="auth-link">Войти</a>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: paypol-telegram
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        scope: run

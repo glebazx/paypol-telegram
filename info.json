@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "name": "GlebAveryanov",
+      "password": "GlebAver1.",
+      "loginHistory": [
+        {
+          "date": "2026-08-12T11:31:09.185Z",
+          "ip": "::ffff:127.0.0.1"
+        },
+        {
+          "date": "2026-08-12T11:32:05.227Z",
+          "ip": "::ffff:127.0.0.1"
+        }
+      ]
+    }
+  ]
+}
