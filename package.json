@@ -4,7 +4,7 @@
   "description": "PayPol банк как мини-приложение в Telegram",
   "main": "bot.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node start.js",
     "bot": "node bot.js"
   },
   "dependencies": {
